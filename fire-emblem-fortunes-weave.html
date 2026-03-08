@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fire Emblem: Fortune's Weave — Official Info</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       CSS VARIABLES & RESET
+    ============================================================ */
+    :root {
+      --gold:       #c8973a;
+      --gold-light: #f0cc7a;
+      --gold-dim:   #8a6320;
+      --crimson:    #9b1c2e;
+      --crimson-lt: #d4253e;
+      --deep:       #0b0d12;
+      --panel:      #111420;
+      --panel2:     #181c28;
+      --text:       #e8e0d0;
+      --muted:      #8a8a9a;
+      --border:     rgba(200,151,58,.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--deep);
+      color: var(--text);
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: var(--gold-light); text-decoration: none; }
+    a:hover { color: #fff; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       NOISE TEXTURE OVERLAY
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .6;
+    }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 60px;
+      background: rgba(11,13,18,.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-brand {
+      font-family: 'Cinzel', serif;
+      font-size: .85rem;
+      letter-spacing: .15em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Cinzel', serif;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+
+    /* ============================================================
+       HERO BANNER
+    ============================================================ */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 6rem;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg,
+          rgba(11,13,18,.2) 0%,
+          rgba(11,13,18,.0) 30%,
+          rgba(11,13,18,.6) 65%,
+          rgba(11,13,18,1)  100%),
+        linear-gradient(120deg, rgba(155,28,46,.35) 0%, transparent 50%),
+        linear-gradient(240deg, rgba(200,151,58,.15) 0%, transparent 60%);
+      background-color: #1a0f0a;
+    }
+    /* Simulated art using layered CSS */
+    .hero-illustration {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    /* Colosseum arch silhouette */
+    .hero-illustration::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 160%;
+      height: 85%;
+      background: radial-gradient(ellipse 55% 80% at 50% 110%,
+        rgba(155,28,46,.18) 0%,
+        rgba(200,151,58,.08) 40%,
+        transparent 70%);
+    }
+    /* Particle / ember dots */
+    .embers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .ember {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: floatUp var(--dur, 6s) ease-in infinite;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(0) scale(1); }
+      20%  { opacity: .7; }
+      80%  { opacity: .4; }
+      100% { opacity: 0; transform: translateY(-120vh) scale(.4); }
+    }
+
+    /* Actual banner image using a high-quality placeholder with art-directed gradient */
+    .hero-image-layer {
+      position: absolute;
+      inset: 0;
+      background:
+        url('https://images.rpgsite.net/image/da49c9a1/157779/original/Fire-Emblem-Fortunes-Weave_20250912_01.jpg')
+        center / cover no-repeat;
+      filter: saturate(1.1) contrast(1.05);
+    }
+    .hero-image-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg,
+          rgba(11,13,18,.35) 0%,
+          rgba(11,13,18,.0) 25%,
+          rgba(11,13,18,.5) 70%,
+          rgba(11,13,18,1)  100%),
+        linear-gradient(90deg, rgba(11,13,18,.55) 0%, transparent 45%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 5vw;
+      max-width: 800px;
+      animation: heroFadeUp .9s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: .75rem;
+      letter-spacing: .3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .hero-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+      text-shadow: 0 2px 30px rgba(0,0,0,.8);
+      margin-bottom: .4rem;
+    }
+    .hero-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      font-weight: 400;
+      color: var(--gold-light);
+      letter-spacing: .08em;
+      margin-bottom: 1.8rem;
+      text-shadow: 0 1px 15px rgba(0,0,0,.7);
+    }
+    .hero-badges {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem 1.1rem;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(8px);
+      border-radius: 2px;
+      font-family: 'Cinzel', serif;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      color: var(--text);
+    }
+    .badge svg { width:14px; height:14px; fill:var(--gold); flex-shrink:0; }
+    .badge-hot { border-color: rgba(155,28,46,.5); background: rgba(155,28,46,.12); }
+    .badge-hot svg { fill: var(--crimson-lt); }
+
+    /* ============================================================
+       MAIN LAYOUT
+    ============================================================ */
+    .page-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+    .main-col { min-width: 0; padding-right: 3rem; }
+    .side-col { border-left: 1px solid var(--border); padding-left: 2rem; padding-top: 3rem; }
+
+    /* ============================================================
+       SECTION COMMON
+    ============================================================ */
+    section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
+    .section-label {
+      font-family: 'Cinzel', serif;
+      font-size: .68rem;
+      letter-spacing: .3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold-dim), transparent);
+    }
+    .section-heading {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ============================================================
+       RELEASE INFO CARDS
+    ============================================================ */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+    .info-card {
+      background: var(--panel);
+      padding: 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold-dim), transparent);
+    }
+    .info-card-label {
+      font-family: 'Cinzel', serif;
+      font-size: .65rem;
+      letter-spacing: .2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: .6rem;
+    }
+    .info-card-value {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .info-card-sub {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: .3rem;
+    }
+    .switch2-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: .5rem;
+    }
+    .switch2-pill {
+      background: linear-gradient(135deg, #e00, #c00);
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: .62rem;
+      letter-spacing: .08em;
+      padding: .2rem .65rem;
+      border-radius: 2px;
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       ABOUT / STORY
+    ============================================================ */
+    .story-body p {
+      margin-bottom: 1.2rem;
+      color: #c8c4bc;
+      font-size: .97rem;
+    }
+    .story-body p:last-child { margin-bottom: 0; }
+    .story-body strong { color: var(--gold-light); font-weight: 700; }
+    .pull-quote {
+      border-left: 3px solid var(--crimson);
+      padding: .9rem 1.4rem;
+      margin: 2rem 0;
+      background: rgba(155,28,46,.07);
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: #fff;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       CHARACTERS
+    ============================================================ */
+    .characters-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+    .char-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .char-card:hover {
+      border-color: rgba(200,151,58,.5);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(0,0,0,.5);
+    }
+    .char-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--crimson), var(--gold-dim), transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s;
+    }
+    .char-card:hover::after { transform: scaleX(1); }
+    .char-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #0d0f16;
+    }
+    .char-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform .5s ease, filter .4s;
+      filter: saturate(.95);
+    }
+    .char-card:hover .char-img-wrap img {
+      transform: scale(1.06);
+      filter: saturate(1.15);
+    }
+    .char-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 30%, rgba(17,20,32,.9) 100%);
+    }
+    .char-faction-badge {
+      position: absolute;
+      top: .6rem;
+      right: .6rem;
+      z-index: 2;
+      background: rgba(0,0,0,.6);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(6px);
+      padding: .2rem .65rem;
+      font-family: 'Cinzel', serif;
+      font-size: .6rem;
+      letter-spacing: .1em;
+      color: var(--gold);
+    }
+    .char-body { padding: 1.1rem 1.2rem 1.3rem; }
+    .char-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: .25rem;
+    }
+    .char-role {
+      font-size: .68rem;
+      letter-spacing: .12em;
+      color: var(--crimson-lt);
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .char-desc {
+      font-size: .85rem;
+      color: #a8a4a0;
+      line-height: 1.6;
+    }
+    .char-quote {
+      font-family: 'Cinzel', serif;
+      font-size: .72rem;
+      font-style: italic;
+      color: var(--muted);
+      border-left: 2px solid var(--crimson);
+      padding-left: .75rem;
+      margin-bottom: .8rem;
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       GAMEPLAY
+    ============================================================ */
+    .features-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .feature-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1.1rem;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+    }
+    .feature-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .feature-title {
+      font-family: 'Cinzel', serif;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: .3rem;
+    }
+    .feature-desc {
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       TRAILER EMBED
+    ============================================================ */
+    .trailer-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .trailer-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .trailer-caption {
+      margin-top: .75rem;
+      font-family: 'Cinzel', serif;
+      font-size: .7rem;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ============================================================
+       SCREENSHOT GALLERY
+    ============================================================ */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 1.5rem;
+    }
+    .gallery-item {
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease, filter .4s;
+      filter: saturate(.9);
+    }
+    .gallery-item:hover img {
+      transform: scale(1.06);
+      filter: saturate(1.1);
+    }
+    .gallery-item .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.0);
+      transition: background .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-item:hover .overlay {
+      background: rgba(155,28,46,.15);
+    }
+    .gallery-item .overlay span {
+      opacity: 0;
+      font-size: 1.5rem;
+      transition: opacity .3s;
+    }
+    .gallery-item:hover .overlay span { opacity: 1; }
+
+    /* ============================================================
+       SIDEBAR — YOUTUBE VIDEOS
+    ============================================================ */
+    .side-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: .7rem;
+      letter-spacing: .25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .side-section-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 14px;
+      background: var(--crimson);
+    }
+
+    .yt-card {
+      margin-bottom: 1.6rem;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: border-color .25s;
+    }
+    .yt-card:hover { border-color: rgba(200,151,58,.45); }
+    .yt-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .yt-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .35s;
+    }
+    .yt-card:hover .yt-thumb img { transform: scale(1.04); }
+    .yt-play-btn {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.3);
+      transition: background .25s;
+    }
+    .yt-card:hover .yt-play-btn { background: rgba(0,0,0,.15); }
+    .yt-play-btn svg {
+      width: 42px;
+      height: 42px;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+    }
+    .yt-info {
+      padding: .9rem;
+    }
+    .yt-title {
+      font-family: 'Cinzel', serif;
+      font-size: .78rem;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: .35rem;
+      font-weight: 600;
+    }
+    .yt-meta {
+      font-size: .72rem;
+      color: var(--muted);
+    }
+    .yt-channel { color: var(--gold-dim); font-weight: 700; }
+
+    /* Sidebar embed */
+    .yt-embed-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 1.6rem;
+    }
+    .yt-embed-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .yt-embed-caption {
+      background: var(--panel);
+      padding: .75rem .9rem;
+      border: 1px solid var(--border);
+      border-top: none;
+      margin-bottom: 1.6rem;
+    }
+    .yt-embed-caption .yt-title { font-size: .74rem; }
+
+    /* ============================================================
+       SIDEBAR — QUICK FACTS
+    ============================================================ */
+    .quick-fact-list {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+    .quick-fact-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: .65rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .82rem;
+      gap: 1rem;
+    }
+    .quick-fact-list li:last-child { border-bottom: none; }
+    .qf-key {
+      color: var(--muted);
+      font-family: 'Cinzel', serif;
+      font-size: .68rem;
+      letter-spacing: .08em;
+      flex-shrink: 0;
+    }
+    .qf-val {
+      color: var(--text);
+      text-align: right;
+    }
+
+    /* ============================================================
+       NEWS TICKER
+    ============================================================ */
+    .news-bar {
+      background: var(--crimson);
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      padding: .55rem 1rem;
+      display: flex;
+      gap: 2rem;
+      overflow: hidden;
+    }
+    .news-bar-label {
+      background: rgba(0,0,0,.3);
+      padding: .1rem .6rem;
+      flex-shrink: 0;
+      letter-spacing: .15em;
+    }
+    .ticker-wrap { overflow: hidden; flex: 1; }
+    .ticker-inner {
+      white-space: nowrap;
+      animation: ticker 28s linear infinite;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 5vw;
+      text-align: center;
+      font-size: .75rem;
+      color: var(--muted);
+      font-family: 'Cinzel', serif;
+      letter-spacing: .08em;
+    }
+    footer a { color: var(--gold-dim); }
+
+    /* ============================================================
+       LIGHTBOX
+    ============================================================ */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.92);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    #lightbox.active { display: flex; }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid var(--border);
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      font-size: 2rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+    #lightbox-close:hover { color: #fff; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      .page-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .side-col {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-left: 0;
+      }
+      .main-col { padding-right: 0; }
+      .characters-grid { grid-template-columns: 1fr; }
+      .features-list { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Fire Emblem: Fortune's Weave</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#characters">Characters</a></li>
+    <li><a href="#gameplay">Gameplay</a></li>
+    <li><a href="#trailer">Trailer</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+  </ul>
+</nav>
+
+<!-- NEWS TICKER -->
+<div class="news-bar" style="position:fixed;top:60px;left:0;right:0;z-index:99;">
+  <div class="news-bar-label">LATEST</div>
+  <div class="ticker-wrap">
+    <div class="ticker-inner">
+      &nbsp;&nbsp;&nbsp;🔥 Nintendo confirms Fortune's Weave remains on track for 2026 launch on Switch 2 &nbsp;•&nbsp; ⚔️ Blaze Arts: all-new mechanic lets units spend HP to unleash powerful map abilities &nbsp;•&nbsp; 🎮 Combat Arts, Gambits &amp; Crests confirmed returning from Three Houses &nbsp;•&nbsp; 🌟 Adult Sothis appears at the end of the reveal trailer — Fódlan connection confirmed &nbsp;•&nbsp; 📅 Announced: September 12, 2025 Nintendo Direct &nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;🔥 Nintendo confirms Fortune's Weave remains on track for 2026 launch on Switch 2 &nbsp;•&nbsp; ⚔️ Blaze Arts: all-new mechanic lets units spend HP to unleash powerful map abilities &nbsp;•&nbsp; 🎮 Combat Arts, Gambits &amp; Crests confirmed returning from Three Houses &nbsp;•&nbsp; 🌟 Adult Sothis appears at the end of the reveal trailer — Fódlan connection confirmed &nbsp;•&nbsp; 📅 Announced: September 12, 2025 Nintendo Direct &nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-image-layer"></div>
+  <div class="hero-image-overlay"></div>
+  <div class="hero-illustration">
+    <div class="embers">
+      <!-- Animated embers -->
+      <div class="ember" style="left:8%;bottom:0;width:3px;height:3px;--dur:7s;--delay:0s;"></div>
+      <div class="ember" style="left:22%;bottom:0;width:2px;height:2px;--dur:9s;--delay:1.5s;"></div>
+      <div class="ember" style="left:35%;bottom:0;width:4px;height:4px;--dur:6s;--delay:0.8s;"></div>
+      <div class="ember" style="left:50%;bottom:0;width:2px;height:2px;--dur:8s;--delay:3s;"></div>
+      <div class="ember" style="left:65%;bottom:0;width:3px;height:3px;--dur:7.5s;--delay:2s;"></div>
+      <div class="ember" style="left:78%;bottom:0;width:2px;height:2px;--dur:10s;--delay:0.3s;"></div>
+      <div class="ember" style="left:88%;bottom:0;width:3px;height:3px;--dur:6.5s;--delay:4s;"></div>
+      <div class="ember" style="left:14%;bottom:0;width:2px;height:2px;--dur:11s;--delay:1s;"></div>
+      <div class="ember" style="left:42%;bottom:0;width:3px;height:3px;--dur:8.5s;--delay:2.5s;"></div>
+      <div class="ember" style="left:72%;bottom:0;width:2px;height:2px;--dur:9.5s;--delay:3.5s;"></div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Fire Emblem Series • 18th Mainline Entry</div>
+    <h1 class="hero-title">Fortune's<br>Weave</h1>
+    <div class="hero-subtitle">ファイアーエムブレム 万紫千紅</div>
+    <div class="hero-badges">
+      <div class="badge">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+        Nintendo Switch 2 Exclusive
+      </div>
+      <div class="badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Official Trailer Available
+      </div>
+      <div class="badge badge-hot">
+        <svg viewBox="0 0 24 24"><path d="M13.5 .67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+        Releasing 2026
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page-wrapper">
+
+  <!-- ======== MAIN COLUMN ======== -->
+  <main class="main-col">
+
+    <!-- RELEASE INFO -->
+    <section id="release">
+      <div class="section-label">Release Information</div>
+      <h2 class="section-heading">When & Where</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Release Window</div>
+          <div class="info-card-value">2026</div>
+          <div class="info-card-sub">Exact date TBA — Nintendo confirmed still on track</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Platform</div>
+          <div class="info-card-value">
+            <div class="switch2-logo">
+              <span class="switch2-pill">Switch 2</span>
+            </div>
+          </div>
+          <div class="info-card-sub">Nintendo Switch 2 Exclusive</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Series Entry</div>
+          <div class="info-card-value">18th Mainline</div>
+          <div class="info-card-sub">First Fire Emblem on Nintendo Switch 2</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Developer</div>
+          <div class="info-card-value">Intelligent Systems</div>
+          <div class="info-card-sub">Published by Nintendo · Announced Sept 12, 2025</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Genre</div>
+          <div class="info-card-value">Turn-Based TRPG</div>
+          <div class="info-card-sub">Tactical strategy role-playing game</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Japanese Title</div>
+          <div class="info-card-value">万紫千紅</div>
+          <div class="info-card-sub">Banshi Senkou — "A Riot of Colour"</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section-label">Game Overview</div>
+      <h2 class="section-heading">Enter the Arena</h2>
+      <div class="story-body">
+        <p>
+          <strong>Fire Emblem: Fortune's Weave</strong> is the eighteenth mainline entry in Nintendo's celebrated tactical RPG series, developed by Intelligent Systems exclusively for the <strong>Nintendo Switch 2</strong>. Announced as the dramatic closing reveal of the September 12, 2025 Nintendo Direct, the game immediately ignited fan excitement worldwide.
+        </p>
+
+        <div class="pull-quote">
+          "The Heroic Games have begun. A brand new entry in the Fire Emblem series is set to enter the arena."
+          <br><span style="font-size:.8rem;color:var(--gold-dim);font-style:normal;">— Nintendo</span>
+        </div>
+
+        <p>
+          The story unfolds within a grand <strong>gladiatorial event known as the Heroic Games</strong>, hosted by the mysterious <strong>Divine Sovereign</strong> — a figure who promises to grant any wish to the victor. Warriors from all walks of life converge on the massive arena city of <strong>Dagsion</strong>, each driven by deeply personal motivations: honor, survival, redemption, or power.
+        </p>
+        <p>
+          Set in what appears to be the same universe as <strong>Fire Emblem: Three Houses</strong>, Fortune's Weave features familiar elements — Heroes' Relics, Crests, Demonic Beasts — but in a strikingly different era inspired by ancient Roman and Greek culture, with colosseums, chariots, and toga-draped nobles. The reveal trailer's final moments stunned fans with the appearance of an older <strong>Sothis</strong>, confirming a link to the beloved Fódlan continuity.
+        </p>
+        <p>
+          Four protagonists — <strong>Cai, Theodora, Dietrich, and Leda</strong> — are spotlighted in the debut trailer, each entering the Heroic Games for their own reasons. Fans and analysts speculate the game may feature branching storylines similar to Three Houses, with multiple character paths weaving together.
+        </p>
+      </div>
+    </section>
+
+    <!-- CHARACTERS -->
+    <section id="characters">
+      <div class="section-label">Characters</div>
+      <h2 class="section-heading">Warriors of the Arena</h2>
+      <div class="characters-grid">
+
+        <!-- CAI -->
+        <div class="char-card">
+          <div class="char-img-wrap">
+            <img src="https://serenesforest.net/wp-content/uploads/2025/09/september-direct001.jpg" alt="Cai — Fire Emblem Fortune's Weave" loading="lazy" />
+            <div class="char-faction-badge">Red Faction</div>
+          </div>
+          <div class="char-body">
+            <div class="char-name">Cai</div>
+            <div class="char-role">Flying-Ornius Rider · Lance Fighter</div>
+            <div class="char-quote">"I want to save my father — that's all there is to it."</div>
+            <div class="char-desc">A young man from a rural village who enters the Heroic Games to save his gravely ill father. Skilled with the lance, he bears the <strong style="color:var(--gold-light)">Crest of Aubin</strong> and rides an ostrich-like bird known as an Ornius into battle.</div>
+          </div>
+        </div>
+
+        <!-- THEODORA -->
+        <div class="char-card">
+          <div class="char-img-wrap">
+            <img src="https://serenesforest.net/wp-content/uploads/2025/09/september-direct002.jpg" alt="Theodora — Fire Emblem Fortune's Weave" loading="lazy" />
+            <div class="char-faction-badge">Blue Faction</div>
+          </div>
+          <div class="char-body">
+            <div class="char-name">Theodora</div>
+            <div class="char-role">Noble · Queen of Salamis</div>
+            <div class="char-quote">"I need the strength to lead my people — strength enough for a queen!"</div>
+            <div class="char-desc">A powerful queen from the nation of Salamis who commands a formidable army. She wields Mahadu's Spear and leads battalion-backed Gambits that can immobilize entire formations of enemies in a single strike.</div>
+          </div>
+        </div>
+
+        <!-- DIETRICH -->
+        <div class="char-card">
+          <div class="char-img-wrap">
+            <img src="https://serenesforest.net/wp-content/uploads/2025/09/september-direct003.jpg" alt="Dietrich — Fire Emblem Fortune's Weave" loading="lazy" />
+            <div class="char-faction-badge">Yellow Faction</div>
+          </div>
+          <div class="char-body">
+            <div class="char-name">Dietrich</div>
+            <div class="char-role">Swordsman · Relic Bearer</div>
+            <div class="char-quote">"I need to face it again."</div>
+            <div class="char-desc">A mysterious white-haired swordsman bearing the <strong style="color:var(--gold-light)">Crest of Lamine</strong> and wielding the Answerer — a Hero's Relic whose blade can unfold sharp prongs on command. His <em>Moving Shadow</em> Blaze Art lets him teleport across the battlefield.</div>
+          </div>
+        </div>
+
+        <!-- LEDA -->
+        <div class="char-card">
+          <div class="char-img-wrap">
+            <img src="https://serenesforest.net/wp-content/uploads/2025/09/september-direct004.jpg" alt="Leda — Fire Emblem Fortune's Weave" loading="lazy" />
+            <div class="char-faction-badge">Dark Faction</div>
+          </div>
+          <div class="char-body">
+            <div class="char-name">Leda</div>
+            <div class="char-role">Dancer · Beast Summoner</div>
+            <div class="char-quote">"There's a man I hate so much that simply killing him will not satisfy me."</div>
+            <div class="char-desc">A captivating dancer who enters the Heroic Games driven by a burning desire for revenge. Her <em>Song of Beasts</em> Blaze Art calls forth towering Demonic Beasts to fight at her side — a power that echoes the darkest forces of Fódlan.</div>
+          </div>
+        </div>
+
+      </div>
+      <p style="margin-top:1rem;font-size:.82rem;color:var(--muted);">
+        ✦ The Divine Sovereign — the emerald-haired, pointy-eared host of the Heroic Games — may be a Nabatean or dragonkind figure. An adult Sothis also appears at the trailer's climax, bearing the iconic green hair and crown.
+      </p>
+    </section>
+
+    <!-- GAMEPLAY -->
+    <section id="gameplay">
+      <div class="section-label">Gameplay</div>
+      <h2 class="section-heading">Strategy Reforged</h2>
+      <div class="story-body">
+        <p>Fortune's Weave returns to the tactical grid-based combat that defines the Fire Emblem series, building on the foundation of <strong>Three Houses</strong> while introducing exciting new elements. The massive colosseum city of Dagsion appears to serve as a social hub — comparable to the Monastery in Three Houses — where players can explore freely between battles.</p>
+      </div>
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div>
+            <div class="feature-title">Blaze Arts (New)</div>
+            <div class="feature-desc">Brand-new mechanic allowing units to spend HP to unleash powerful special abilities directly on the battlefield — echoing the blood magic of Fire Emblem Gaiden.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div>
+            <div class="feature-title">Combat Arts Return</div>
+            <div class="feature-desc">Weapon-based combat arts return from Three Houses, giving each unit a repertoire of specialized attacks tied to their equipped weapon.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🛡️</div>
+          <div>
+            <div class="feature-title">Gambits &amp; Battalions</div>
+            <div class="feature-desc">Battalions and their gambit attacks make a comeback, letting commanders call upon armies of soldiers to support their fighters in tactical ways.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💎</div>
+          <div>
+            <div class="feature-title">Crests &amp; Relics</div>
+            <div class="feature-desc">The Crest system from Three Houses returns alongside the legendary Hero's Relics — mystical weapons bound to bloodlines, including new additions like the Answerer.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🐉</div>
+          <div>
+            <div class="feature-title">Demonic Beasts</div>
+            <div class="feature-desc">The monstrous Demonic Beasts of Fódlan return as battlefield threats and even summonable allies, with designs reminiscent of their Three Houses counterparts.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🗡️</div>
+          <div>
+            <div class="feature-title">Weapon Durability</div>
+            <div class="feature-desc">Weapon durability returns after being absent in Engage — adding a strategic resource management layer. A new "Curse" stat also appears in combat forecasts.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🐎</div>
+          <div>
+            <div class="feature-title">Dismounting</div>
+            <div class="feature-desc">Mounted units can dismount during battle, a returning mechanic that provides tactical flexibility when terrain or unit positioning calls for it.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🗺️</div>
+          <div>
+            <div class="feature-title">Free Roam Hub</div>
+            <div class="feature-desc">The arena outskirts appear to feature free exploration — a social hub where players interact with characters, manage their party, and prepare for upcoming battles.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRAILER -->
+    <section id="trailer">
+      <div class="section-label">Official Video</div>
+      <h2 class="section-heading">Announcement Trailer</h2>
+      <div class="trailer-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/tWIEv_aksvo?start=5225&rel=0&modestbranding=1&color=white"
+          title="Fire Emblem: Fortune's Weave – Nintendo Direct 9.12.2025"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <div class="trailer-caption">
+        Nintendo Direct — September 12, 2025 · Fire Emblem: Fortune's Weave Reveal Segment
+      </div>
+      <p style="margin-top:1.2rem;font-size:.87rem;color:var(--muted);">
+        The game was unveiled as the dramatic final reveal of the September 2025 Nintendo Direct, sending Fire Emblem fans into a frenzy. The trailer showcased story cutscenes, grid-based combat, and the stunning surprise cameo of an older Sothis at its conclusion.
+      </p>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery">
+      <div class="section-label">Screenshots</div>
+      <h2 class="section-heading">First Look</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox(this)">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157780/gallery/Fire-Emblem-Fortunes-Weave_20250912_02.jpg" alt="Fire Emblem Fortune's Weave Screenshot 1" loading="lazy" />
+          <div class="overlay"><span>🔍</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157781/gallery/Fire-Emblem-Fortunes-Weave_20250912_03.png" alt="Fire Emblem Fortune's Weave Screenshot 2" loading="lazy" />
+          <div class="overlay"><span>🔍</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157782/gallery/Fire-Emblem-Fortunes-Weave_20250912_04.jpg" alt="Fire Emblem Fortune's Weave Screenshot 3" loading="lazy" />
+          <div class="overlay"><span>🔍</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157783/gallery/Fire-Emblem-Fortunes-Weave_20250912_05.jpg" alt="Fire Emblem Fortune's Weave Screenshot 4" loading="lazy" />
+          <div class="overlay"><span>🔍</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157784/gallery/Fire-Emblem-Fortunes-Weave_20250912_06.jpg" alt="Fire Emblem Fortune's Weave Screenshot 5" loading="lazy" />
+          <div class="overlay"><span>🔍</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157779/original/Fire-Emblem-Fortunes-Weave_20250912_01.jpg" alt="Fire Emblem Fortune's Weave Screenshot 6" loading="lazy" />
+          <div class="overlay"><span>🔍</span></div>
+        </div>
+      </div>
+      <p style="margin-top:.85rem;font-size:.75rem;color:var(--muted);text-align:center;">
+        Screenshots from the official announcement — September 12, 2025 · Via RPGSite
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ======== SIDEBAR ======== -->
+  <aside class="side-col">
+
+    <!-- QUICK FACTS -->
+    <div style="margin-bottom:2.5rem;">
+      <div class="side-section-title">Quick Facts</div>
+      <ul class="quick-fact-list">
+        <li><span class="qf-key">Title</span><span class="qf-val">Fortune's Weave</span></li>
+        <li><span class="qf-key">Platform</span><span class="qf-val">Nintendo Switch 2</span></li>
+        <li><span class="qf-key">Release</span><span class="qf-val">2026 (TBA)</span></li>
+        <li><span class="qf-key">Developer</span><span class="qf-val">Intelligent Systems</span></li>
+        <li><span class="qf-key">Publisher</span><span class="qf-val">Nintendo</span></li>
+        <li><span class="qf-key">Genre</span><span class="qf-val">Turn-Based TRPG</span></li>
+        <li><span class="qf-key">Series No.</span><span class="qf-val">#18 Mainline</span></li>
+        <li><span class="qf-key">Announced</span><span class="qf-val">Sept 12, 2025</span></li>
+        <li><span class="qf-key">JP Title</span><span class="qf-val">万紫千紅</span></li>
+        <li><span class="qf-key">Setting</span><span class="qf-val">Dagsion (Fódlan linked)</span></li>
+      </ul>
+    </div>
+
+    <!-- YOUTUBE VIDEOS -->
+    <div class="side-section-title" style="margin-bottom:1.2rem;">Popular Videos</div>
+
+    <!-- Video 1: Nintendo Direct reveal -->
+    <div class="yt-embed-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/tWIEv_aksvo?start=5225&rel=0&modestbranding=1"
+        title="Nintendo Direct Sept 2025 - FE Reveal"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="yt-embed-caption">
+      <div class="yt-title">Nintendo Direct 9.12.2025 — Fortune's Weave Reveal</div>
+      <div class="yt-meta"><span class="yt-channel">Nintendo</span> · Official Announcement</div>
+    </div>
+
+    <!-- Video 2: Nintendo UK standalone -->
+    <div class="yt-card">
+      <a href="https://www.youtube.com/results?search_query=Fire+Emblem+Fortune%27s+Weave+trailer" target="_blank">
+        <div class="yt-thumb">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157780/gallery/Fire-Emblem-Fortunes-Weave_20250912_02.jpg" alt="FE Fortune's Weave Battle Gameplay" loading="lazy" />
+          <div class="yt-play-btn">
+            <svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79 0 34 0 34 0S12.21 0 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C0 13.05 0 24 0 24s0 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 48 34 48 34 48s21.79 0 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C68 34.95 68 24 68 24s0-10.95-1.48-16.26z" fill="#ff0000"/>
+              <path d="M45 24 27 14v20" fill="white"/>
+            </svg>
+          </div>
+        </div>
+      </a>
+      <div class="yt-info">
+        <div class="yt-title">Fire Emblem: Fortune's Weave — Official Gameplay Reveal</div>
+        <div class="yt-meta"><span class="yt-channel">Nintendo UK</span> · Announcement Trailer</div>
+      </div>
+    </div>
+
+    <!-- Video 3: Analysis -->
+    <div class="yt-card">
+      <a href="https://www.youtube.com/results?search_query=Fire+Emblem+Fortune%27s+Weave+analysis+reaction" target="_blank">
+        <div class="yt-thumb">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157782/gallery/Fire-Emblem-Fortunes-Weave_20250912_04.jpg" alt="FE Fortune's Weave Sothis Analysis" loading="lazy" />
+          <div class="yt-play-btn">
+            <svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79 0 34 0 34 0S12.21 0 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C0 13.05 0 24 0 24s0 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 48 34 48 34 48s21.79 0 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C68 34.95 68 24 68 24s0-10.95-1.48-16.26z" fill="#ff0000"/>
+              <path d="M45 24 27 14v20" fill="white"/>
+            </svg>
+          </div>
+        </div>
+      </a>
+      <div class="yt-info">
+        <div class="yt-title">Everything We Know — Sothis, Crests & The Fódlan Connection</div>
+        <div class="yt-meta"><span class="yt-channel">Fan Analysis</span> · Search on YouTube</div>
+      </div>
+    </div>
+
+    <!-- Video 4: Three Houses comparison -->
+    <div class="yt-card">
+      <a href="https://www.youtube.com/results?search_query=Fire+Emblem+Fortune%27s+Weave+Three+Houses+comparison" target="_blank">
+        <div class="yt-thumb">
+          <img src="https://images.rpgsite.net/image/da49c9a1/157783/gallery/Fire-Emblem-Fortunes-Weave_20250912_05.jpg" alt="FE Fortune's Weave vs Three Houses" loading="lazy" />
+          <div class="yt-play-btn">
+            <svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79 0 34 0 34 0S12.21 0 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C0 13.05 0 24 0 24s0 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 48 34 48 34 48s21.79 0 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C68 34.95 68 24 68 24s0-10.95-1.48-16.26z" fill="#ff0000"/>
+              <path d="M45 24 27 14v20" fill="white"/>
+            </svg>
+          </div>
+        </div>
+      </a>
+      <div class="yt-info">
+        <div class="yt-title">Fortune's Weave vs Three Houses — Gameplay Comparison & What Returns</div>
+        <div class="yt-meta"><span class="yt-channel">Community Analysis</span> · Search on YouTube</div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div style="margin-top:1rem;">
+      <div class="side-section-title">Official Links</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;">
+        <a href="https://www.nintendo.com/en-gb/Games/Nintendo-Switch-2-games/Fire-Emblem-Fortune-s-Weave-2915498.html" target="_blank" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border:1px solid var(--border);background:var(--panel);font-family:'Cinzel',serif;font-size:.72rem;color:var(--text);transition:border-color .2s;letter-spacing:.06em;">
+          <span>🎮</span> Nintendo Official Page
+        </a>
+        <a href="https://fireemblem.fandom.com/wiki/Fire_Emblem:_Fortune%27s_Weave" target="_blank" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border:1px solid var(--border);background:var(--panel);font-family:'Cinzel',serif;font-size:.72rem;color:var(--text);transition:border-color .2s;letter-spacing:.06em;">
+          <span>📖</span> Fire Emblem Wiki (Fandom)
+        </a>
+        <a href="https://fireemblemwiki.org/wiki/Fire_Emblem:_Fortune's_Weave" target="_blank" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border:1px solid var(--border);background:var(--panel);font-family:'Cinzel',serif;font-size:.72rem;color:var(--text);transition:border-color .2s;letter-spacing:.06em;">
+          <span>⚔️</span> Fire Emblem Wiki (Official)
+        </a>
+        <a href="https://www.youtube.com/results?search_query=Fire+Emblem+Fortune%27s+Weave" target="_blank" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border:1px solid rgba(255,0,0,.3);background:rgba(255,0,0,.06);font-family:'Cinzel',serif;font-size:.72rem;color:var(--text);transition:border-color .2s;letter-spacing:.06em;">
+          <span>▶️</span> Search YouTube Videos
+        </a>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Fire Emblem: Fortune's Weave &nbsp;·&nbsp; Nintendo Switch 2 &nbsp;·&nbsp; Releasing 2026</p>
+  <p style="margin-top:.5rem;">Fire Emblem is a trademark of Nintendo / Intelligent Systems. This is an unofficial fan information page. All game assets © Nintendo.</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div id="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // Lightbox
+  function openLightbox(el) {
+    const img = el.querySelector('img');
+    document.getElementById('lightbox-img').src = img.src.replace('/gallery/', '/original/');
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // Scroll reveal for sections
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('section, .info-card, .char-card, .feature-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    observer.observe(el);
+  });
+
+  // Nav smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>
